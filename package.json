@@ -1,0 +1,50 @@
+{
+  "name": "vindexchain-ecosystem",
+  "version": "1.0.0",
+  "description": "VindexChain - The First Blockchain of Puerto Rico",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:core\" \"npm run dev:explorer\" \"npm run dev:wallet\" \"npm run dev:dex\" \"npm run dev:website\"",
+    "dev:core": "cd blockchain && go run main.go",
+    "dev:explorer": "cd explorer && npm run dev",
+    "dev:wallet": "cd wallet && npm run dev",
+    "dev:dex": "cd dex && npm run dev",
+    "dev:website": "cd website && npm run dev",
+    "build": "npm run build:explorer && npm run build:wallet && npm run build:dex && npm run build:website",
+    "build:explorer": "cd explorer && npm run build",
+    "build:wallet": "cd wallet && npm run build",
+    "build:dex": "cd dex && npm run build",
+    "build:website": "cd website && npm run build",
+    "test": "npm run test:core && npm run test:explorer && npm run test:wallet && npm run test:dex",
+    "test:core": "cd blockchain && go test ./...",
+    "test:explorer": "cd explorer && npm test",
+    "test:wallet": "cd wallet && npm test",
+    "test:dex": "cd dex && npm test",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "blockchain",
+    "cryptocurrency",
+    "defi",
+    "web3",
+    "puerto-rico",
+    "proof-of-stake"
+  ],
+  "author": "VindexChain Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

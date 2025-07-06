@@ -1,0 +1,49 @@
+{
+  "name": "vindexwallet",
+  "version": "1.0.0",
+  "description": "VindexWallet - Browser Extension for VindexChain",
+  "private": true,
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "build:chrome": "npm run build && npm run package:chrome",
+    "build:firefox": "npm run build && npm run package:firefox",
+    "package:chrome": "web-ext build --source-dir=dist --artifacts-dir=packages --overwrite-dest",
+    "package:firefox": "web-ext build --source-dir=dist --artifacts-dir=packages --overwrite-dest --filename=vindexwallet-firefox.zip",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.312.0",
+    "tailwindcss": "^3.4.1",
+    "clsx": "^2.1.0",
+    "bignumber.js": "^9.1.2",
+    "bip39": "^3.1.0",
+    "crypto-js": "^4.2.0",
+    "secp256k1": "^5.0.0",
+    "axios": "^1.6.5",
+    "react-hot-toast": "^2.4.1",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/chrome": "^0.0.258",
+    "@types/crypto-js": "^4.2.1",
+    "@types/secp256k1": "^4.0.6",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "postcss": "^8.4.33",
+    "postcss-loader": "^7.3.4",
+    "autoprefixer": "^10.4.17",
+    "web-ext": "^7.9.0"
+  }
+}
