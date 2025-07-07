@@ -79,7 +79,6 @@ export function SwapInterface() {
               Balance: {fromToken.balance} {fromToken.symbol}
             </span>
           </div>
-          
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2 bg-gray-700 rounded-lg px-3 py-2">
               <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center">
@@ -89,7 +88,6 @@ export function SwapInterface() {
               </div>
               <span className="text-white font-medium">{fromToken.symbol}</span>
             </div>
-            
             <input
               type="number"
               value={fromAmount}
@@ -104,7 +102,7 @@ export function SwapInterface() {
         <div className="flex justify-center">
           <button
             onClick={handleFlipTokens}
-            className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-600 transition-all duration-200 hover:border-red-600"
+            className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 transition-all duration-200 hover:border-red-600"
           >
             <ArrowUpDown className="w-5 h-5 text-gray-400" />
           </button>
@@ -118,7 +116,6 @@ export function SwapInterface() {
               Balance: {toToken.balance} {toToken.symbol}
             </span>
           </div>
-          
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2 bg-gray-700 rounded-lg px-3 py-2">
               <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
@@ -128,7 +125,6 @@ export function SwapInterface() {
               </div>
               <span className="text-white font-medium">{toToken.symbol}</span>
             </div>
-            
             <input
               type="number"
               value={toAmount}
