@@ -1,0 +1,117 @@
+@startuml VindexChain-C4-Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title VindexChain Ecosystem - Context Diagram
+
+Person(user, "End User", "Crypto trader, DeFi user")
+Person(validator, "Validator", "Network validator operator")
+Person(developer, "Developer", "dApp developer")
+Person(compliance, "Compliance Officer", "KYC/AML monitoring")
+
+System_Boundary(vindexchain, "VindexChain Ecosystem") {
+    System(core, "VindexChain Core", "PoS Blockchain\n65k+ TPS, 3s blocks")
+    System(wallet, "VindexWallet", "Browser Extension + Mobile")
+    System(explorer, "VindexScan", "Block Explorer + Analytics")
+    System(dex, "BurnSwap", "AMM DEX with Auto-Burn")
+    System(ai, "AI Module Suite", "Market Predictions + Reputation")
+    System(factory, "Token Factory", "No-code Token Creation")
+    System(domains, "Domain System", ".vindex Web3 Domains")
+}
+
+System_Ext(fiat, "Fiat On/Off Ramps", "Moonpay, Ramp Network")
+System_Ext(oracles, "Price Oracles", "Chainlink, Band Protocol")
+System_Ext(compliance_ext, "Compliance APIs", "Chainalysis, Elliptic")
+System_Ext(cloud, "Cloud Infrastructure", "AWS/GCP Multi-region")
+
+Rel(user, wallet, "Manages assets")
+Rel(user, dex, "Trades tokens")
+Rel(user, explorer, "Views transactions")
+Rel(validator, core, "Validates blocks")
+Rel(developer, factory, "Creates tokens")
+Rel(compliance, compliance_ext, "Monitors transactions")
+
+Rel(wallet, core, "Submits transactions", "gRPC/REST")
+Rel(dex, core, "Swap transactions", "gRPC")
+Rel(explorer, core, "Queries blockchain", "REST/WebSocket")
+Rel(ai, oracles, "Price data", "HTTPS")
+Rel(core, compliance_ext, "OFAC screening", "HTTPS")
+
+@enduml
+
+@startuml VindexChain-C4-Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title VindexChain Core - Container Diagram
+
+System_Boundary(core, "VindexChain Core") {
+    Container(consensus, "Consensus Engine", "Go, Tendermint", "PoS consensus with slashing")
+    Container(vm, "Vindex-VM", "Go, WASM", "Smart contract execution")
+    Container(mempool, "Mempool", "Go", "Transaction ordering")
+    Container(state, "State Machine", "Go", "Account & token state")
+    Container(api, "API Gateway", "Go Fiber", "REST/gRPC/WebSocket APIs")
+    Container(p2p, "P2P Network", "Go libp2p", "Peer discovery & sync")
+}
+
+ContainerDb(postgres, "PostgreSQL", "Primary database", "Blocks, transactions, accounts")
+ContainerDb(clickhouse, "ClickHouse", "Analytics DB", "Time-series data, metrics")
+ContainerDb(redis, "Redis", "Cache", "Session data, rate limiting")
+
+Container_Ext(monitoring, "Monitoring", "Prometheus + Grafana", "Metrics & alerting")
+
+Rel(api, consensus, "Block queries")
+Rel(api, state, "Account queries")
+Rel(consensus, vm, "Execute transactions")
+Rel(consensus, mempool, "Get transactions")
+Rel(state, postgres, "Persist state")
+Rel(api, clickhouse, "Analytics queries")
+Rel(api, redis, "Cache layer")
+Rel(p2p, consensus, "Block propagation")
+
+@enduml
+
+@startuml VindexChain-Sequence-Transaction
+!theme plain
+title Transaction Flow - From Wallet to Finality
+
+participant "VindexWallet" as wallet
+participant "API Gateway" as api
+participant "Mempool" as mempool
+participant "Consensus" as consensus
+participant "Vindex-VM" as vm
+participant "State Machine" as state
+participant "PostgreSQL" as db
+
+wallet -> api: POST /api/v1/transactions/broadcast
+activate api
+
+api -> api: Validate transaction format
+api -> mempool: Add transaction
+activate mempool
+
+mempool -> mempool: Check nonce, balance, gas
+mempool -> consensus: Transaction ready
+deactivate mempool
+
+activate consensus
+consensus -> consensus: Propose block
+consensus -> vm: Execute transactions
+activate vm
+
+vm -> state: Update account balances
+activate state
+state -> db: Persist state changes
+deactivate state
+
+vm -> consensus: Execution results
+deactivate vm
+
+consensus -> consensus: Finalize block
+consensus -> api: Block committed
+deactivate consensus
+
+api -> wallet: Transaction confirmed
+deactivate api
+
+note over consensus: 3-second block time\n2-block finality
+
+@enduml
